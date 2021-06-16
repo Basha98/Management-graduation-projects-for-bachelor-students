@@ -1,0 +1,45 @@
+﻿@model  IEnumerable<App.Models.Project>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<hr />
+<h3 style="text-align:center"> Delete or Edit Projects</h3>
+<hr />
+<br />
+<table class="table table-bordered   table-striped">
+    <tr>
+        <th style="font-size:22px">
+            @Html.DisplayNameFor(model => model.GroupName)
+        </th>
+        <th style="font-size:22px">
+            @Html.DisplayNameFor(model => model.Descriptation)
+        </th>
+
+        <th style="font-size:22px"> Option</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GroupName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descriptation)
+            </td>
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Token }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Token })|
+                @Html.ActionLink("Details", "Details", new { id = item.Token })
+            </td>
+        </tr>
+    }
+
+</table>
+<div>
+    @Html.ActionLink("To Back", "convert", "Groups", new { @class = "btn btn-primary" })
+</div>  
+

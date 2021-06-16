@@ -1,0 +1,76 @@
+﻿@model App.Models.User
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<hr />
+<h3 style="text-align:center">My Profile</h3>
+<hr />
+<br />
+ <table class="table table-bordered   table-striped">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayFor(model => model.FullName)
+            </th>
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayFor(model => model.Email)
+            </th>
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th>
+                @Html.DisplayFor(model => model.Password)
+            </th>
+        </tr>
+
+    </table>
+    <div>
+       
+    </div>
+
+<br />
+<p>
+    <div>
+
+        @if (CheckType(int.Parse(User.Identity.Name)))
+        {
+            @Html.ActionLink("To Back", "convert2", "Users", new { @class = "btn btn-danger" })
+        }
+        else
+        {
+            @Html.ActionLink("To Back", "convert", new { Token = gettoken(int.Parse(User.Identity.Name)) }, new { @class = "btn btn-danger" })
+        } | @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
+    </div>
+</p>
+
+
+
+
+
+@functions{
+    App.Models.AppDBEntities db = new App.Models.AppDBEntities();
+    public bool CheckType(int IdUser)
+    {
+        var curentUser = db.Supervisor.FirstOrDefault(x => x.Id == IdUser);
+        if (curentUser != null)
+            return true;
+        else
+            return false;
+    }
+    public string gettoken(int id)
+    {
+        return db.Student.FirstOrDefault(x => x.User.Id == id).Token;
+    }
+}

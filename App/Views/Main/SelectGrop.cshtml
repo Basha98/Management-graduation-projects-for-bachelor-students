@@ -1,0 +1,81 @@
+﻿@model IEnumerable<App.Models.Project>
+
+@{
+    ViewBag.Title = "SelectGrop";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<br />
+<br />
+<div>
+    <h1 style="text-align:center;font:bold;font-size:40px">Your Projects </h1>
+    <br />
+
+    <div class="container">
+        <div class="row">
+
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th style="color:black;font-size:30px">
+                        Project Name
+                    </th>
+                    <th style="color:black;font-size:30px">
+                        Option
+                    </th>
+
+
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <h4 style="color:black">@item.GroupName</h4>
+                        </td>
+
+                        <td>
+
+                            <h4 style="color:black"> @Html.ActionLink("Select", "IndexAdmin", new { token = item.Token })</h4>
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+@functions
+{
+    App.Models.AppDBEntities db = new App.Models.AppDBEntities();
+    public bool CheckType(int IdUser)
+    {
+        var curentUser = db.Supervisor.FirstOrDefault(x => x.Id == IdUser);
+        if (curentUser != null)
+            return true;
+        else
+            return false;
+    } 
+    public bool CheckGroup(int IdUser)
+            {
+                var curentUser = db.Supervisor.FirstOrDefault(x => x.Id == IdUser);
+                var g = db.Project.FirstOrDefault(x => x.Supervisor_Id == IdUser);
+                if (g != null)
+                    return false;
+                else
+                    return true;
+            }
+
+}
+@if (CheckType(int.Parse(User.Identity.Name)))
+{
+    if (CheckGroup(int.Parse(User.Identity.Name)))
+    {
+    @section SectionCreateGroup{
+
+
+        <li><a href=@Url.Action("CreateGroup", "Main")>Create Project</a></li>
+    }
+    }
+
+
+}

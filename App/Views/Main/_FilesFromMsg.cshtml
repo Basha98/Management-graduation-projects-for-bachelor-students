@@ -1,0 +1,75 @@
+﻿@model App.Models.FileDetails
+@{
+    ViewBag.Title = "FileFrom";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<br />
+<hr />
+
+    <h1 style="text-align:center;font:bold;font-size:30px">Files of Project</h1>
+    <hr />
+    <div class="container">
+        <table class="table  table-bordered   table-striped">
+            <tr>
+
+                <th>
+                    File Name
+                </th>
+                <th>
+                    DateTime
+                </th>
+                <th>
+                    Option
+                </th>
+
+                <th>
+                    Delete
+                </th>
+
+            </tr>
+
+            @for (int i = Model.files.Count - 1; i >= 0; i--)
+            {
+                <tr>
+
+                    <td>
+                        @Model.files[i].FileName
+                    </td>
+                    <td>
+                        @Model.files[i].Time
+                    </td>
+
+                    <td>
+
+                        @Html.ActionLink("Download", "DownLoadFileMessage", new { token = Model.files[i].Token, id = Model.files[i].Id })
+                    </td>
+
+                    <td>
+                        @if (Model.files[i].UserID == int.Parse(User.Identity.Name))
+                        {@Html.ActionLink("Delete", "DeleteFile", new { token = Model.files[i].Token, id = Model.files[i].Id });
+                    }
+
+                    </td>
+
+                </tr>
+
+            }
+
+
+        </table>
+        <div>
+            @Html.ActionLink("To Back", "IndexAdmin", new { token = Model.Token }, new { @class = "btn btn-primary" })
+        </div>
+    </div>
+    @functions
+{
+        public int getAdminGrop(string token)
+        {
+
+            App.Models.AppDBEntities _context = new App.Models.AppDBEntities();
+            var Grop = _context.Project.FirstOrDefault(x => x.Token == token);
+            return Grop.Supervisor_Id;
+        }
+    }

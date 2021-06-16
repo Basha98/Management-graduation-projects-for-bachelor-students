@@ -1,0 +1,123 @@
+﻿@model App.Models.loginData
+    @{
+            Layout = null;
+    }
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width" />
+            <title>start</title>
+            <link href="~/NewFolder1/bootstrap.min.css" rel="stylesheet" type="text/css" />
+            <link href="~/NewFolder1/Site.css" rel="stylesheet" type="text/css" />
+            <script src="~/NewFolder1/jquery-3.4.1.min.js"></script>
+            <script src="~/NewFolder1/modernizr-2.8.3.js"></script>
+            <script src="~/NewFolder1/bootstrap.min.js"></script>
+
+            <style>
+
+                .mybar {
+                    font-family: 'Arabic Typesetting';
+                    font-size: 20px;
+                    color: white;
+                    background-color: #29292c
+                }
+            </style>
+        </head>
+        <body>
+
+
+            <div class="navbar navbar-inverse navbar-fixed-top" style="background-color: rgb(38, 94, 152)">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <img src="~/Resources/kil.jpg" style=" width: 200px; height: 165px" />
+                            </li>
+                            
+                        </ul>
+
+
+                        <ul class=" nav navbar-nav navbar-right">
+                            <li>
+                                <h1 style="font-size:45px;padding-top:12%">الجامعة المستنصرية </h1>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <marquee behavior="alternate" derection="right" class="mybar">
+                        منصة خاصة للتواصل بين الاستاذ المشرف  والطالب بخصوص مشروع التخرج  مرحبا بك قم بأختيار تسجيل دخولك
+                    </marquee>
+
+                </div>
+
+
+            </div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br /><br />
+            <br />
+            <br />
+
+            <div class="container body-content">
+
+                <div class=" form-horizontal">
+
+                    <div class=" row">
+                        <div class="col-xs-3"> </div>
+
+                        <div class="col-xs-2">
+                            <div class=" form-group">
+                                <img src="~/Resources/Admin.jpg" style=" width: 200px; height: 180px" /><br />
+
+                                <h6>  @Html.ActionLink("Login Supervisor", "Login", "Account", new { @class = "btn btn-primary form-control" })</h6>
+
+
+                                <h6>
+                                    @Html.ActionLink("Register Supervisor", "RegisterAdmin", "Account", new { @class = "btn  btn-success form-control" })
+                                </h6>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-2"></div>
+
+                        <div class="col-xs-2">
+                            <div class=" form-group">
+                                <img src="~/Resources/student1.jpg" style=" width: 200px; height: 180px;padding-left:10px" />
+                                <h6> @Html.ActionLink("Login Student", "loginStudent", "Account", new { @class = "btn btn-primary form-control" })</h6>
+                                <h6> @Html.ActionLink("Register Student", "RegisterStudent", "Account", new { @class = "btn btn-success form-control" })</h6>
+
+                            </div>
+                        </div>
+                        <div class="col-xs-3"> </div>
+                    </div>
+
+
+                </div>
+              
+            </div>
+
+            <hr />
+            <div class="container">
+                <footer>
+                    <p>&copy; @DateTime.Now.Year - Management graduation projects for bachelor students</p>
+                </footer>
+            </div>
+
+
+
+        </body>
+        </html>

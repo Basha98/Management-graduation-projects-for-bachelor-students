@@ -1,0 +1,32 @@
+﻿@model App.Models.DetailsForStudent
+
+    <div>
+        <hr />
+        <h3 style="text-align:center"> Details of Student</h3>
+        <hr />
+
+      
+
+        <table class="table table-bordered   table-striped">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Student.User.FullName)
+                </th>
+                <th>
+                    @Html.DisplayFor(model => model.Student.User.FullName)
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Student.User.Email)
+                </th>
+                <th>
+                    @Html.DisplayFor(model => model.Student.User.Email)
+                </th>
+            </tr>
+           
+        </table>
+    </div>
+<p>
+    @Html.ActionLink("To Back", "StudentMangment","Main",new { token=Model.Token},new { @class="btn btn-primary"})
+</p>

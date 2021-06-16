@@ -1,0 +1,98 @@
+﻿@model App.Models.Project
+
+@{
+    ViewBag.Title = "CreateGroup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*<hr />
+    <h2 style=" text-align:center">Create Project</h2>*@
+<br />
+<br />
+<hr />
+
+<h1 style="text-align:center;font:bold;font-size:30px">Create Project</h1>
+<hr />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+      
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <h2 style="color:red"> @ViewBag.GroupMessage</h2>
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.GroupName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.GroupName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.GroupName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descriptation, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Descriptation, new { @class = "form-control" })
+
+                @Html.ValidationMessageFor(model => model.Descriptation, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Token, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Token, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Token, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+@if (CheckGroup(int.Parse(User.Identity.Name)) == true)
+{
+
+    <p>
+
+        <div>
+            @Html.ActionLink("To Back", "SelectGrop", "Main", new { id = int.Parse(User.Identity.Name) }, new { @class = "btn btn-primary" })
+        </div>
+    </p>
+}
+
+
+
+
+
+@functions
+    {
+    App.Models.AppDBEntities db = new App.Models.AppDBEntities();
+
+
+    public bool CheckGroup(int IdUser)
+    {
+        var curentUser = db.Supervisor.FirstOrDefault(x => x.Id == IdUser);
+        var g = db.Project.FirstOrDefault(x => x.Supervisor_Id == IdUser);
+        if (g != null)
+            return true;
+        else
+            return false;
+    }
+
+}
+

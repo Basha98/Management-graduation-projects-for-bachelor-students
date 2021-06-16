@@ -1,0 +1,195 @@
+﻿@model App.Models.IndexAdminDetails
+@{
+    ViewBag.Title = "IndexAdmin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.to = Model.Token;
+}
+
+<br />
+
+<input value=@Model.Token type="hidden" id="gropid" />
+<input value=@int.Parse(User.Identity.Name) type="hidden" id="userid" />
+
+
+<div class=" row">
+    <div class=" col-xs-10">
+        <div class="chatcontainer">
+
+        </div>
+    </div>
+    <div class=" col-xs-2">
+        <label class="form-control" style=" background-color:aqua"> Supervisor</label>
+        <div class="admin">
+            Supervisor
+        </div>
+        <hr />
+
+        <label class="form-control" style=" background-color:aqua"> Student</label>
+        <div class="users_list">
+            Student List
+        </div>
+
+
+        <hr />
+        <div style=" margin-top:49%">
+            @using (Html.BeginForm("SendFile", "Main", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <label for="file">Upload File:</label>
+
+                <input value=@Model.Token type="hidden" id="token" name="token" />
+                <input type="file" name="file" id="file" /><br><br>
+                <input type="submit" value="Upload File" class="btn btn-primary" />
+                <br><br>
+
+            }
+        </div>
+        <hr />
+
+
+
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+        var chat = $.connection.chatHubs;
+        $.connection.hub.logging = true;
+        chat.client.broadCastToChat = function (listUsers) {
+            $('.users_list').html('');
+            for (var i = 0; i < listUsers.length; i++) {
+                let online = listUsers[i].IsOnline ? '<i class="fa fa-circle"></i>' : "";
+                $('.users_list').append('<div id="UserBox-' + listUsers[i].UserId + '" class="user-box" onclick="openChatBox(' + listUsers[i].UserId + ')">\
+                <h5>'+ listUsers[i].FullName + '</h5>\
+                <span class="is-online">'+ online + '</span>\
+            </div>');
+            }
+        };
+
+        chat.client.broadCastAdminToChat = function (listUsers) {
+            $('.admin').html('');
+            let online = listUsers.IsOnline ? '<i class="fa fa-circle"></i>' : "";
+            $('.admin').append('<div id="UserBox-' + listUsers.UserId + '" class="user-box" onclick="openChatBox(' + listUsers.UserId + ')">\
+                <h5>'+ listUsers.FullName + '</h5>\
+                <span class="is-online">'+ online + '</span>\
+            </div>');
+
+        }
+
+        chat.client.broadCastOnlineUser = function (userId) {
+
+            $('.users_list').find('#UserBox-' + userId + '').find('span[class="is-online"]')
+                .html('<i class="fa fa-circle"></i>');
+        }
+
+        chat.client.broadCastOfflineUser = function (userId) {
+            $('.users_list').find('#UserBox-' + userId + '').find('span[class="is-online"]').html('');
+        }
+
+
+
+
+        chat.client.broadcastRecive = function (token,type,NameOfuser,msg,fromid, time)
+        {
+            if (fromid === $('#userid').val())
+            {
+                $('#DVChatBox-' + token).find('.messages-list').append('<div class="dvmsg dvmsg-from"><span class="msg">'
+                    + ' <span> <img src="/Resources/' + type + '"style=" width: 35px; height: 35px;border-radius:50%" /></span>'
+                    + '<span style="font-size:16px;color:black;font-weight:bold">' +" "+ NameOfuser + ' </span>' + '</br>'
+                    + msg + ' <br/>' +
+                    '<span style="font-size:10px; text-align:right;">' + time + '</span>' +
+                    '</span></div>');
+              
+            }
+
+
+            else {
+            
+                $('#DVChatBox-' + token).find('.messages-list').append
+                    ('<div class="dvmsg dvmsg-to"><span class="msg">'
+                        + ' <span> <img src="/Resources/' + type + ' " style=" width: 35px; height: 35px;border-radius:50%" /></span>'
+                        + '<span style="font-size:16px;color:black;font-weight:bold">' + " "+NameOfuser + ' </span>'
+                        + '</br>' + msg + ' <br/>' + '<span style="font-size:10px; text-align:right;">' + time 
+                        + '</span>' + '</span></div>');
+            
+            }
+            $('#DVChatBox-' + token).find('.messages-list').scrollTop(999999999999);
+        }
+
+
+
+
+
+
+        $.connection.hub.start().done(function () {
+            var token = $('#gropid').val();
+            chat.server.getUser(token);
+            openChatBox(token);
+
+
+        });
+    });
+
+
+   
+
+
+    function openChatBox(token) {
+        $.ajax({
+            url: '/Main/GetChatbox',
+            type: 'GET',
+            datatype: 'JSON',
+            contentType: 'application/json;charset=utf-8;',
+            data: { token: token },
+            async: true,
+            success: function (res) {
+                $('.chatcontainer').append(res);
+            }
+        });
+
+    }
+
+
+
+
+</script>
+
+@section files{
+
+    <li><a href=@Url.Action("FileDetail", "Main", new { token = ViewBag.to })>&nbsp;Files</a></li>
+}
+
+@if (CheckType(int.Parse(User.Identity.Name)))
+{
+    @section StudentMange{
+
+        <li><a href=@Url.Action("StudentMangment", "Main", new { token = ViewBag.to })>Student Management</a></li>
+
+
+    }
+
+
+    
+}
+@functions
+{
+    App.Models.AppDBEntities db = new App.Models.AppDBEntities();
+    public bool CheckType(int IdUser)
+    {
+        var curentUser = db.Supervisor.FirstOrDefault(x => x.Id == IdUser);
+        if (curentUser != null)
+            return true;
+        else
+            return false;
+    }
+
+}
+@if (CheckType(int.Parse(User.Identity.Name))==false)
+{
+    @section AboutGroup{
+
+        <li><a href=@Url.Action("Details", "Main", new { id = ViewBag.to })>&nbsp;Details of Project</a></li>
+}
+}

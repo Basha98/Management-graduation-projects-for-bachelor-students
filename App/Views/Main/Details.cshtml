@@ -1,0 +1,43 @@
+﻿@model App.Models.Project
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<hr />
+<h3 style="text-align:center">Details of Group</h3>
+<hr />
+<br />
+<table class="table table-bordered   table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.GroupName)
+        </th>
+        <th>
+            @Html.DisplayFor(model => model.GroupName)
+        </th>
+    </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Descriptation)
+        </th>
+        <th>
+            @Html.DisplayFor(model => model.Descriptation)
+        </th>
+    </tr>
+    <tr>
+        <th>
+          Code of Project
+        </th>
+        <th>
+            @Html.DisplayFor(model => model.Token)
+        </th>
+    </tr>
+</table>
+<p>
+
+    <div>
+        @Html.ActionLink("To Back", "IndexAdmin", new { token = Model.Token },new { @class = "btn btn-primary" })
+    </div>
+</p>

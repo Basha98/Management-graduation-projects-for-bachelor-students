@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>@ViewBag.Title - My ASP.NET Application</title>
+
+       <link href="~/NewFolder1/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/NewFolder1/Site.css" rel="stylesheet" />
+        <link href="~/NewFolder1/all.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+        <link href="~/NewFolder1/fontawesome.min.css" rel="stylesheet" />
+        <script src="~/NewFolder1/jquery-3.4.1.min.js"></script>
+        <script src="~/NewFolder1/modernizr-2.8.3.js"></script>
+        <script src="~/NewFolder1/bootstrap.min.js"></script>
+        <script src="~/NewFolder1/jquery.signalR-2.4.1.min.js"></script>
+        <script src="~/signalr/hubs"></script>
+    </head>
+    <body>
+
+
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="#" class="navbar-brand" >Management graduation projects for bachelor students</a>
+                </div>
+                <div class="navbar-collapse collapse" id="myNavbar">
+                    <ul class="nav navbar-nav">
+
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            if (CheckType(int.Parse(User.Identity.Name)) == true)
+                            {
+                                @RenderSection("StudentMange", required: false)
+                                if (CheckGroup(int.Parse(User.Identity.Name)))
+                                {
+
+                                    <li class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                            Projects Management
+                                            <span class="caret"></span>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href=@Url.Action("SelectGrop", "Main")>Select Project</a></li>
+                                            <li><a href=@Url.Action("CreateGroup", "Main")>Create Project</a></li>
+                                            <li><a href=@Url.Action("Index", "Groups", new { id = int.Parse(User.Identity.Name) })>Delete or Edit Projecst</a></li>
+
+                                        </ul>
+                                    </li>
+
+                                }
+                                @RenderSection("SectionCreateGroup", required: false)
+                                 
+
+                          
+                            }
+
+
+
+                            @RenderSection("AboutGroup", required: false)
+
+                            @RenderSection("files", required: false)
+
+                        }
+
+
+
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li><a href="@Url.Action("Details", "Users",new { id=int.Parse(User.Identity.Name)})">@GetUserName(int.Parse(User.Identity.Name))</a></li>
+                       
+                            <li><a href=@Url.Action("logout", "Account")>&nbsp;Logout</a></li>
+
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="container body-content">
+            @RenderBody()
+
+        </div>
+        @functions
+        {
+            App.Models.AppDBEntities db = new App.Models.AppDBEntities();
+
+            public string GetUserName(int IdUser)
+            {
+                var curentUser = db.User.FirstOrDefault(x => x.Id == IdUser);
+                return curentUser.FullName;
+            }
+
+            public bool CheckType(int IdUser)
+            {
+                var curentUser = db.Supervisor.FirstOrDefault(x => x.Id == IdUser);
+                if (curentUser != null)
+                    return true;
+                else
+                    return false;
+            }
+            public bool CheckGroup(int IdUser)
+            {
+                var curentUser = db.Supervisor.FirstOrDefault(x => x.Id == IdUser);
+                var g = db.Project.FirstOrDefault(x => x.Supervisor_Id == IdUser);
+                if (g != null)
+                    return true;
+                else
+                    return false;
+            }
+
+        }
+
+    </body>
+    </html>
+    <script>
+        $(document).ready(function () {
+            $(".dropdown").hover(function () {
+                $(this).toggleClass("open");
+            });
+        })
+
+    </script>
+
